@@ -1,14 +1,20 @@
 import re
+import os
 import time
 
 import requests
 import lxml.html
 from pymongo import MongoClient
 
+MONGODB_USER = os.environ['MONGODB_USER']
+MONGODB_PASSWORD = os.environ['MONGODB_PASSWORD']
+MONGODB_HOST = os.environ['MONGODB_HOST']
+
 def get_mongodb_collection():
-    """ MongoDBに接続し、ebooksコレクションを返す。（ユーザーID, パスワード）=（python-designated, python-pwd）
+    """ MongoDBに接続し、ebooksコレクションを返す。ユーザIDとパスワードは.envに記載
     """
-    uri = 'mongodb://python-designated:python-pwd@localhost:27017/gihyo'
+    # uri = 'mongodb://python-designated:python-pwd@localhost:27017/gihyo'
+    uri = 'mongodb://%s:%s@%s/gihyo' % ( MONGODB_USER, MONGODB_PASSWORD, MONGODB_HOST )
     client = MongoClient(uri)
     collection = client.gihyo.ebooks
     collection.create_index('key', unique=True)
